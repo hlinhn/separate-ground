@@ -31,6 +31,8 @@ struct ProcessMapCloudParam
   bool create_height_image;
   double image_resolution;
   double height_im_max;
+  std::string mean_intensity_image_name;
+  std::string height_image_name;
 };
 
 struct HeightInd

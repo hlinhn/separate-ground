@@ -36,7 +36,8 @@ readParamFile(std::string file_name)
   param.create_height_image = yaml["image"]["height"].as<bool>();
   param.image_resolution = yaml["image"]["resolution"].as<double>();
   param.height_im_max = yaml["image"]["max_height"].as<double>();
-
+  param.mean_intensity_image_name = yaml["image"]["intensity_name"].as<std::string>();
+  param.height_image_name = yaml["image"]["height_name"].as<std::string>();
   return param;
 }
 

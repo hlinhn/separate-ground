@@ -22,3 +22,5 @@ image:
   height: false
   resolution: 0.1
   max_height: 0.3
+  intensity_name: "intensity.png"
+  height_name: "height.png"
