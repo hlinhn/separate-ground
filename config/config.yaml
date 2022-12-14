@@ -16,3 +16,9 @@ separate:
   erase_fudge: 1.0
   min_distance_considered: 4.0
   highest_diff: 1.0
+
+image:
+  intensity: false
+  height: false
+  resolution: 0.1
+  max_height: 0.3

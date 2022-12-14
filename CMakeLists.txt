@@ -22,11 +22,19 @@ include_directories(
 link_directories(${PCL_LIBRARIES_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable(${PROJECT_NAME}_node src/flatten.cpp src/helper.cpp)
+add_library(${PROJECT_NAME}_helper src/helper.cpp src/image_generation.cpp)
+add_executable(${PROJECT_NAME}_node src/flatten.cpp)
 # add_executable(curb_data src/curb_from_outline.cpp)
 
-target_link_libraries(${PROJECT_NAME}_node
+target_link_libraries(${PROJECT_NAME}_helper
   yaml-cpp
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${PCL_LIBRARIES}
+  )
+
+target_link_libraries(${PROJECT_NAME}_node
+  ${PROJECT_NAME}_helper
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
   ${PCL_LIBRARIES}

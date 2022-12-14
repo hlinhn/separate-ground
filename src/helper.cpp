@@ -32,6 +32,11 @@ readParamFile(std::string file_name)
   param.min_distance_considered = yaml["separate"]["min_distance_considered"].as<double>();
   param.ground_highest_diff = yaml["separate"]["highest_diff"].as<double>();
 
+  param.create_mean_intensity = yaml["image"]["intensity"].as<bool>();
+  param.create_height_image = yaml["image"]["height"].as<bool>();
+  param.image_resolution = yaml["image"]["resolution"].as<double>();
+  param.height_im_max = yaml["image"]["max_height"].as<double>();
+
   return param;
 }
 

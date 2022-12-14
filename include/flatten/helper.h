@@ -26,6 +26,11 @@ struct ProcessMapCloudParam
   double ground_erase_fudge;
   double min_distance_considered;
   double ground_highest_diff;
+
+  bool create_mean_intensity;
+  bool create_height_image;
+  double image_resolution;
+  double height_im_max;
 };
 
 struct HeightInd

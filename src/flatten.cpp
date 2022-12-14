@@ -1,127 +1,7 @@
 #include <flatten/flatten.h>
 #include <flatten/helper.h>
-#include <iostream>
+#include <flatten/image_generation.h>
 #include <pcl/io/pcd_io.h>
-#include <sstream>
-
-// cv::Mat
-// createMeanHeight(CloudT::Ptr points, double resolution)
-// {
-//   std::pair<cv::Point2d, cv::Point2d> minmax = cloudMinmax(points);
-//   cv::Point2d min, max;
-//   min = minmax.first;
-//   max = minmax.second;
-
-//   unsigned int sizex = std::ceil((max.x - min.x) / resolution);
-//   unsigned int sizey = std::ceil((max.y - min.y) / resolution);
-
-//   cv::Mat sumIm(sizex, sizey, CV_64FC1, cv::Scalar(0));
-//   cv::Mat countIm(sizex, sizey, CV_16UC1, cv::Scalar(0));
-
-//   double phmin, phmax;
-//   cv::minMaxLoc(sumIm, &phmin, &phmax);
-//   std::cout << phmin << " " << phmax << std::endl;
-
-//   for (const auto p : *points)
-//   {
-//     int x = std::ceil((p.x - min.x) / resolution);
-//     int y = std::ceil((p.y - min.y) / resolution);
-//     if (x < 0 || x >= sizex || y < 0 || y >= sizey)
-//       continue;
-//     if (countIm.at<unsigned int>(x, y) == 0)
-//     {
-//       sumIm.at<double>(x, y) = p.intensity;
-//       countIm.at<unsigned int>(x, y) = 1;
-//       continue;
-//     }
-//     sumIm.at<double>(x, y) += p.intensity;
-//     countIm.at<unsigned int>(x, y) += 1;
-//   }
-
-//   cv::Mat diffIm(sizex, sizey, CV_8UC1, cv::Scalar(0));
-//   for (unsigned int i = 0; i < countIm.rows; i++)
-//   {
-//     for (unsigned int j = 0; j < countIm.cols; j++)
-//     {
-//       if (countIm.at<unsigned int>(i, j) == 0)
-//         continue;
-//       sumIm.at<double>(i, j) = sumIm.at<double>(i, j) / countIm.at<unsigned int>(i, j);
-//     }
-//   }
-
-//   double hmin, hmax;
-//   cv::minMaxLoc(sumIm, &hmin, &hmax);
-
-//   sumIm -= hmin;
-//   sumIm /= (hmax + hmin);
-//   sumIm *= 255;
-//   std::cout << hmin << " " << hmax << std::endl;
-//   std::ostringstream out;
-//   out << "aver_" << std::setprecision(8) << min.x << "_" << min.y << "_" << resolution << ".png";
-
-//   cv::imwrite(out.str().c_str(), sumIm);
-//   return sumIm;
-// }
-
-// cv::Mat
-// createImage(CloudT::Ptr points, double resolution, double max_height = 0.3)
-// {
-//   std::pair<cv::Point2d, cv::Point2d> minmax = cloudMinmax(points);
-//   cv::Point2d min, max;
-//   min = minmax.first;
-//   max = minmax.second;
-
-//   unsigned int sizex = std::ceil((max.x - min.x) / resolution);
-//   unsigned int sizey = std::ceil((max.y - min.y) / resolution);
-
-//   cv::Mat minIm(sizex, sizey, CV_64FC1, cv::Scalar(0));
-//   cv::Mat maxIm(sizex, sizey, CV_64FC1, cv::Scalar(0));
-//   cv::Mat countIm(sizex, sizey, CV_8UC1, cv::Scalar(0));
-
-//   for (const auto p : *points)
-//   {
-//     int x = std::ceil((p.x - min.x) / resolution);
-//     int y = std::ceil((p.y - min.y) / resolution);
-//     if (x < 0 || x >= sizex || y < 0 || y >= sizey)
-//       continue;
-//     if (countIm.at<char>(x, y) == 0)
-//     {
-//       minIm.at<double>(x, y) = p.z;
-//       maxIm.at<double>(x, y) = p.z;
-//       countIm.at<unsigned char>(x, y) = 1;
-//       continue;
-//     }
-//     if (p.z < minIm.at<double>(x, y))
-//       minIm.at<double>(x, y) = p.z;
-//     if (p.z > maxIm.at<double>(x, y))
-//       maxIm.at<double>(x, y) = p.z;
-//   }
-
-//   cv::Mat diffIm(sizex, sizey, CV_8UC1, cv::Scalar(255));
-
-//   // double max_val = std::log(max_height + 8);
-//   double max_val = max_height;
-//   for (unsigned int i = 0; i < minIm.rows; i++)
-//   {
-//     for (unsigned int j = 0; j < minIm.cols; j++)
-//     {
-//       if (countIm.at<unsigned char>(i, j) == 0)
-//         continue;
-//       double d = maxIm.at<double>(i, j) - minIm.at<double>(i, j);
-//       if (d < 0.05 || d > 0.3)
-//         continue;
-//       double v = d; // std::log((d + 8) / (max_height + 8)) + 1;
-
-//       if (d > max_val)
-//         v = max_val;
-//       v = (v - 0.05) / (max_val - 0.05) * 255;
-//       diffIm.at<unsigned char>(i, j) = 255 - std::floor(v);
-//     }
-//   }
-
-//   cv::imwrite("diff.png", diffIm);
-//   return diffIm;
-// }
 
 // void
 // pickCurb(CloudT::Ptr points, double resolution, double max_val, double min_val)
@@ -219,78 +99,6 @@
 //     }
 //   }
 //   pcl::io::savePCDFileBinary("dense.pcd", *dense_ground);
-// }
-
-// void
-// createDensityAndHeight(CloudT::Ptr points, double resolution)
-// {
-//   std::pair<cv::Point2d, cv::Point2d> minmax = cloudMinmax(points);
-//   cv::Point2d min, max;
-//   min = minmax.first;
-//   max = minmax.second;
-
-//   unsigned int sizex = std::ceil((max.x - min.x) / resolution);
-//   unsigned int sizey = std::ceil((max.y - min.y) / resolution);
-
-//   cv::Mat minIm(sizex, sizey, CV_64FC1, cv::Scalar(0));
-//   cv::Mat maxIm(sizex, sizey, CV_64FC1, cv::Scalar(0));
-//   cv::Mat countIm(sizex, sizey, CV_32SC1, cv::Scalar(0));
-
-//   for (const auto p : *points)
-//   {
-//     int x = std::ceil((p.x - min.x) / resolution);
-//     int y = std::ceil((p.y - min.y) / resolution);
-//     if (x < 0 || x >= sizex || y < 0 || y >= sizey)
-//       continue;
-//     if (countIm.at<int>(x, y) == 0)
-//     {
-//       minIm.at<double>(x, y) = p.z;
-//       maxIm.at<double>(x, y) = p.z;
-//       countIm.at<int>(x, y) = 1;
-//       continue;
-//     }
-//     if (p.z < minIm.at<double>(x, y))
-//       minIm.at<double>(x, y) = p.z;
-//     if (p.z > maxIm.at<double>(x, y))
-//       maxIm.at<double>(x, y) = p.z;
-//     countIm.at<int>(x, y) += 1;
-//   }
-//   /*
-//     int oob = 0;
-//     cv::Mat denseIm(sizex, sizey, CV_8UC1, cv::Scalar(255));
-//     for (unsigned int i = 0; i < minIm.rows; i++) {
-//       for (unsigned int j = 0; j < minIm.cols; j++) {
-//         int d = countIm.at<int>(i, j);
-//         if (d > 255) {
-//           oob++;
-//           d = 255;
-//         }
-//         denseIm.at<unsigned char>(i, j) = d;
-//       }
-//     }
-
-//     std::ostringstream out;
-//     out << "density_" << std::setprecision(6) << min.x << "_" << min.y << "_" << resolution << "_.png";
-//     cv::imwrite(out.str().c_str(), denseIm);
-//     std::cout << oob << std::endl;
-//   */
-
-//   double min_val = 0.03;
-//   double max_val = 2.5;
-//   cv::Mat heightdiffIm(sizex, sizey, CV_8UC1, cv::Scalar(255));
-//   for (unsigned int i = 0; i < minIm.rows; i++)
-//   {
-//     for (unsigned int j = 0; j < minIm.cols; j++)
-//     {
-//       double d = maxIm.at<double>(i, j) - minIm.at<double>(i, j);
-//       if (d < max_val && d > min_val)
-//         heightdiffIm.at<unsigned char>(i, j) = 255 - (d - min_val) / (max_val - min_val) * 255;
-//     }
-//   }
-
-//   std::ostringstream out_height;
-//   out_height << "heightdiff_" << std::setprecision(6) << min.x << "_" << min.y << "_" << resolution << "_.png";
-//   cv::imwrite(out_height.str().c_str(), heightdiffIm);
 // }
 
 // void
@@ -578,22 +386,20 @@ main(int argc, char* argv[])
   {
     separateGround(points, param);
   }
-  // if (argc == 2)
-  // {
-  //   createMeanHeight(points, 0.05);
-  //   // createDensityAndHeight(points, 0.1);
-  //   // createImage(points, 0.1);
-  //   return 0;
-  // }
+  if (param.create_mean_intensity)
+  {
+    createMeanIntensityImage(points, param.image_resolution);
+  }
+  if (param.create_height_image)
+  {
+    createHeightImage(points, param.image_resolution, param.height_im_max);
+  }
   // if (argc == 3)
   // {
   //   // double resolution = std::stod(argv[2]);
   //   // pickCurb(points, 0.1);
-  //   // createImage(points, resolution);
-  //   // createMeanHeight(points, 0.05);
   //   // flattenCloud(points);
   //   // voxelize(points);
-  //   // CloudT::Ptr ground = read_cloud(std::string(argv[2]));
   //   // chooseDenseGround(points, ground);
   //   createCurbImage(points, std::stod(argv[2]));
   //   return 0;
