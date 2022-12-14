@@ -62,7 +62,7 @@ main(int argc, char* argv[])
 {
   if (argc < 2)
   {
-    std::cout << "USAGE: flatten con fig_file\n";
+    std::cout << "USAGE: flatten config_file\n";
     return 1;
   }
 
